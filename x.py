@@ -7,6 +7,7 @@ def booth_function(x, y):
 def hooke_jeeves(x0, x1, delta, alpha, epsilon):
     x = x0
     y = x1
+    iterations = 0  # Contador de iteraciones
     while max(delta) > epsilon:
         x_best = (x, y)
         f_best = booth_function(x_best[0], x_best[1])
@@ -22,8 +23,8 @@ def hooke_jeeves(x0, x1, delta, alpha, epsilon):
             y = x_best[1]
         else:
             delta = tuple(d / alpha for d in delta)
-    return x_best
-
+        iterations += 1  # Incrementar contador de iteraciones
+    return x_best, iterations  # Devolver también el número de iteraciones
 
 x0 = -5
 x1 = -2.5
@@ -32,7 +33,8 @@ delta = (0.5, 0.25)
 alpha = 2
 epsilon = 0.0001
 
-resultado = hooke_jeeves(x0, x1, delta, alpha, epsilon)
+resultado, iteraciones = hooke_jeeves(x0, x1, delta, alpha, epsilon)
 
 print("El mínimo se encuentra en x =", resultado)
 print("El valor mínimo de la función es f(x) =", booth_function(resultado[0], resultado[1]))
+print("Número de iteraciones:", iteraciones)
