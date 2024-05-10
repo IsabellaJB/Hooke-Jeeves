@@ -4,51 +4,49 @@ def booth_function(x, y):
     return ((x + 2*y - 7)**2) + ((2*x + y - 5)**2)
 
 def exploratory_move(x, y, delta):
-    new_x = x + delta[0] * np.random.uniform(-1, 1)  # Movimiento más dirigido
-    new_y = y + delta[1] * np.random.uniform(-1, 1)  # Movimiento más dirigido
-    return new_x, new_y
+    x_nueva_suma = x + delta[0]
+    x_nueva_resta = x - delta[0]
+    resultado_x_suma = booth_function(x_nueva_suma, y)
+    resultado_x_resta = booth_function(x_nueva_resta, y)
+    y_nueva_suma = y + delta[1]
+    y_nueva_resta = y - delta[1]
+    resultado_y_suma = booth_function(x, y_nueva_suma)
+    resultado_y_resta = booth_function(x, y_nueva_resta)
+    if resultado_x_suma < resultado_x_resta:
+        x_nueva = x_nueva_suma
+    else:
+        x_nueva = x_nueva_resta
+    if resultado_y_suma < resultado_y_resta:
+        y_nueva = y_nueva_suma
+    else:
+        y_nueva = y_nueva_resta
+    return x_nueva, y_nueva
 
-def pattern_move(x_k, y_k, x_k_minus_1, y_k_minus_1):
-    new_x = x_k + (x_k - x_k_minus_1)
-    new_y = y_k + (y_k - y_k_minus_1)
-    return new_x, new_y
+def pattern_move(k, k_minus_1):
+    x = k[0] + (k[0] - k_minus_1[0])
+    y = k[1] + (k[1] - k_minus_1[1])
+    return x, y
 
-def algorithm(starting_point, delta, alpha, epsilon, max_iterations):
-    x_k_minus_1, y_k_minus_1 = starting_point
-    x_k, y_k = starting_point
-    k = 0
 
-    while k < max_iterations:  # Definir el criterio de parada
-        x, y = exploratory_move(x_k, y_k, delta)
-        if booth_function(x, y) < booth_function(x_k, y_k):
-            x_k_plus_1, y_k_plus_1 = x, y
-        else:
-            delta = (delta[0] / alpha, delta[1] / alpha)
-            k += 1
-            continue
 
-        pattern_moved = pattern_move(x_k_plus_1, y_k_plus_1, x_k, y_k)
-        x, y = exploratory_move(pattern_moved[0], pattern_moved[1], delta)
-        if booth_function(x, y) < booth_function(x_k_plus_1, y_k_plus_1):
-            x_k, y_k = x, y
-        else:
-            x_k, y_k = x_k_plus_1, y_k_plus_1
 
-        if np.linalg.norm((x_k - x_k_minus_1, y_k - y_k_minus_1)) < epsilon:
-            break
+def hooke_jeeves(punto_inicial, delta, alpha, epsilon): 
+    x = punto_inicial[0]
+    y = punto_inicial[1]
 
-        k += 1
+    movimiento_exploratorio = exploratory_move(x, y, delta)
 
-    return x_k, y_k
 
-# Parámetros proporcionados
-starting_point = (-5, -2.5)  # Punto inicial
-delta = (0.05, 0.05)  # Incrementos de variable más pequeños
-alpha = 2  # Factor de reducción de paso
-epsilon = 0.0001  # Parámetro de terminación
-max_iterations = 1000  # Número máximo de iteraciones
+    return(movimiento_exploratorio)
 
-# Ejecutar el algoritmo
-result = algorithm(starting_point, delta, alpha, epsilon, max_iterations)
-print("Resultado final:", result)
-print("Valor de la función objetivo en el resultado final:", booth_function(*result))
+
+
+
+
+
+punto_inicial = (-5, -2.5)
+delta = (0.5, 0.25)  
+alpha = 2 
+epsilon = 0.0001
+max_iterations = 1000  
+print(hooke_jeeves(punto_inicial,delta, alpha, epsilon))

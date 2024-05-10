@@ -23,8 +23,8 @@ def hooke_jeeves(x0, x1, delta, alpha, epsilon):
             y = x_best[1]
         else:
             delta = tuple(d / alpha for d in delta)
-        iterations += 1  # Incrementar contador de iteraciones
-    return x_best, iterations  # Devolver también el número de iteraciones
+        iterations += 1 
+    return x_best, iterations  
 
 x0 = -5
 x1 = -2.5
