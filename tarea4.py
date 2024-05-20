@@ -52,11 +52,6 @@ def verificar_distancia(vector, e):
     distancia = distancia_origen(vector)
     return distancia < e
 
-# def paso2(punto, delta):
-#     movimiento_exploratorio = exploratory_move(punto,delta)
-# def paso3():
-# def paso4():
-
 
 def hooke_jeeves(punto_inicial, delta, alpha, epsilon): 
     k = 0
@@ -64,87 +59,28 @@ def hooke_jeeves(punto_inicial, delta, alpha, epsilon):
     punto_actual_evaluado = booth_function(punto_actual)
     distancia = distancia_origen(delta)
 
+    while distancia > epsilon:
+        movimiento_exploratorio = exploratory_move(punto_actual, delta)
+        movimiento_exploratorio_evaluado = booth_function(movimiento_exploratorio)
 
-    while (distancia > 0):
         if movimiento_exploratorio_evaluado < punto_actual_evaluado:
-            movimiento_exploratorio = exploratory_move(punto_actual, delta)
-            movimiento_exploratorio_evaluado = booth_function(movimiento_exploratorio)
-
             punto_anterior = punto_actual
-            punto_actual = movimiento_exploratorio
-
-            k += 1
-
-            movimiento_patron = pattern_move(punto_actual,punto_anterior)
-            punto_actual = movimiento_patron
-
+            punto_actual = pattern_move(movimiento_exploratorio, punto_anterior)
             punto_actual_evaluado = booth_function(punto_actual)
-
-
-
         else:
-            delta = actualizar_delta(delta,alpha)
+            delta = actualizar_delta(delta, alpha)
             distancia = distancia_origen(delta)
-    return movimiento_exploratorio
 
-
-
-    
-    # bandera = 0
-    # while bandera != 1:
-    #     distancia = distancia_origen(delta)
-
-        
-    #     if movimiento_exploratorio_evaluado < punto_inicial_evaluado:
-    #         # step 4
-    #         k+=1
-    #         movimiento_patron = pattern_move(movimiento_exploratorio, punto_inicial)
-    #         # X(k+1)
-    #         otro_movimiento_exploratorio = exploratory_move(movimiento_patron, delta)
-    #         evaluado_otro = booth_function(otro_movimiento_exploratorio)
-
-
-
-    #         if evaluado_otro < movimiento_exploratorio_evaluado:
-    #             # step 4
-    #         else:
-    #             # step 3
-
-
-
-    #     else:
-    #         # step 3
-    #         if distancia < epsilon:
-    #             bandera = 1
-    #             return movimiento_exploratorio
-    #         else:
-    #             delta = actualizar_delta(delta,alpha)
-                
-
-
-
-
-
-
+    return punto_actual
 
 punto_inicial = [-5, -2.5]
 delta = [0.5, 0.25]  
 alpha = 2 
-# epsilon = 0.0001
 epsilon = 0.1
-max_iterations = 1000  
-print(hooke_jeeves(punto_inicial,delta, alpha, epsilon))
+print(hooke_jeeves(punto_inicial, delta, alpha, epsilon))
 
 
 
 
-# print(actualizar_delta(delta,alpha))
 
 
-# vector = delta 
-# e = epsilon             
-
-# if verificar_distancia(vector, e):
-#     print("La distancia del vector {} al origen es menor que {}.".format(vector, e))
-# else:
-#     print("La distancia del vector {} al origen no es menor que {}.".format(vector, e))
