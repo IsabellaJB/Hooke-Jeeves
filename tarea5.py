@@ -58,3 +58,48 @@ deltas = [0.5, 0.25]
 alpha = 2 
 epsilon = 0.01
 
+
+
+def hooke_jeeves(x0, deltas, alpha, epsilon, objective_function):
+    xk = x0[:]
+    xk_1 = x0[:]
+    k = 0
+
+    distancia = distancia_origen(deltas)
+    
+    while (distancia > 0):
+        # Paso 2: Movimiento exploratorio
+        xk_new = exploratory_move(xk, deltas, objective_function)
+        
+        if xk_new != xk:
+            xk = xk_new[:]
+            xk_1 = xk[:]
+            k += 1
+            
+            # Paso 4: Movimiento de patrón
+            xk_p = pattern_move(xk, xk_1)
+            
+            # Paso 5: Otro movimiento exploratorio desde el nuevo punto patrón
+            xk_new = exploratory_move(xk_p, deltas, objective_function)
+            
+            if objective_function(xk_new) < objective_function(xk):
+                xk = xk_new[:]
+            else:
+                # Paso 3: Verificar si los incrementos son menores que epsilon
+                if max(deltas) < epsilon:
+                    break
+                deltas = [delta / alpha for delta in deltas]
+        else:
+            # Paso 3: Verificar si los incrementos son menores que epsilon
+            if max(deltas) < epsilon:
+                break
+            deltas = [delta / alpha for delta in deltas]
+    
+    return xk
+
+
+
+resultado = hooke_jeeves(punto_inicial, deltas, alpha, epsilon, booth_function)
+print("Resultado final:", resultado)
+# print("Valor de la función objetivo en el resultado final:", objective_function(resultado))
+
