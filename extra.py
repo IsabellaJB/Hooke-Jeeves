@@ -88,36 +88,32 @@ def hooke_jeeves(x0, deltas, alpha, epsilon, objective_function):
     xk = x0[:]
     xk_1 = x0[:]
     k = 0
-    exploratorios = []  # Arreglo para almacenar los puntos exploratorios
+    exploratorios = [] 
+    patron = []
 
     distancia = distancia_origen(deltas)
     
     while (distancia > 0):
-        # Paso 2: Movimiento exploratorio
         xk_new = exploratory_move(xk, deltas, objective_function)
-        exploratorios.append(xk_new[:])  # Guardar el punto exploratorio
-
+        exploratorios.append(xk_new[:])
         if xk_new != xk:
             xk = xk_new[:]
             xk_1 = xk[:]
             k += 1
             
-            # Paso 4: Movimiento de patrón
             xk_p = pattern_move(xk, xk_1)
+            exploratorios.append(xk_p[:])
             
-            # Paso 5: Otro movimiento exploratorio desde el nuevo punto patrón
             xk_new = exploratory_move(xk_p, deltas, objective_function)
-            exploratorios.append(xk_new[:])  # Guardar el punto exploratorio
+            exploratorios.append(xk_new[:])
             
             if objective_function(xk_new) < objective_function(xk):
                 xk = xk_new[:]
             else:
-                # Paso 3: Verificar si los incrementos son menores que epsilon
                 if max(deltas) < epsilon:
                     break
                 deltas = [delta / alpha for delta in deltas]
         else:
-            # Paso 3: Verificar si los incrementos son menores que epsilon
             if max(deltas) < epsilon:
                 break
             deltas = [delta / alpha for delta in deltas]
@@ -163,10 +159,15 @@ print("Valor de la función objetivo en el resultado final:", booth_function(opt
 fig, ax = plt.subplots()
 x_data, y_data = [], []
 
-ax.set_xlim(-6, 6)
-ax.set_ylim(-6, 6)
+x = np.linspace(-8, 8, 400)
+y = np.linspace(-8, 8, 400)
+X, Y = np.meshgrid(x, y)
+Z = booth_function([X, Y])
 
-
+contour = ax.contourf(X, Y, Z, cmap='viridis')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Booth Function')
 
 point, = ax.plot([], [], 'bo')
 path, = ax.plot([], [], 'r-', alpha=0.5)
@@ -184,9 +185,6 @@ def update(frame):
     return point, path
 
 ani = animation.FuncAnimation(fig, update, frames=len(exploratorios), init_func=init, blit=True, repeat=False)
-
-# ani.save('animation.mp4', writer='ffmpeg', fps=30)
-
 
 plt.xlabel('x1')
 plt.ylabel('x2')
