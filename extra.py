@@ -7,39 +7,6 @@ def booth_function(arreglo):
     y = arreglo[1]
     return ((x + 2*y - 7)**2) + ((2*x + y - 5)**2)
 
-def exploratory_move(arreglo_variables, delta):
-    copia = arreglo_variables.copy()
-    if len(arreglo_variables) == len(delta):
-        nuevo_punto = []
-        for i in range(0, len(arreglo_variables)):
-            normal = arreglo_variables[i]
-            suma = arreglo_variables[i] + delta[i]
-            resta = arreglo_variables[i] - delta[i]
-            copia[i] = normal
-            evalua_normal = booth_function(copia)
-            copia[i] = suma
-            evalua_suma = booth_function(copia)
-            copia[i] = resta
-            evalua_resta = booth_function(copia)
-            minimo = min(evalua_normal, evalua_suma, evalua_resta)
-            if minimo == evalua_normal:
-                nuevo_punto.append(normal)
-            elif minimo == evalua_suma:
-                nuevo_punto.append(suma)
-            else:
-                nuevo_punto.append(resta)
-        return nuevo_punto
-    else:
-        print("No son de la misma dimension")
-
-def pattern_move(k, k_minus_1):
-    resul = []
-    x = k[0] + (k[0] - k_minus_1[0])
-    y = k[1] + (k[1] - k_minus_1[1])
-    resul.append(x)
-    resul.append(y)
-    return resul
-
 def actualizar_delta(delta,alpha):
     lista_deltas = []
     for i in delta:
@@ -180,7 +147,9 @@ def init():
 def update(frame):
     x_data.append(exploratorios[frame][0])
     y_data.append(exploratorios[frame][1])
-    point.set_data(exploratorios[frame][0], exploratorios[frame][1])
+    # point.set_data(exploratorios[frame][0], exploratorios[frame][1])
+    point.set_data([exploratorios[frame][0]], [exploratorios[frame][1]])
+
     path.set_data(x_data, y_data)
     return point, path
 
